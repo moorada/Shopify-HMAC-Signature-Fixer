@@ -20,6 +20,7 @@ import java.util.List;
  * This extension intercepts all outgoing HTTP requests and calculates an HMAC SHA256
  * signature based on the request parameters, then adds it as a 'signature' parameter.
  * 
+ * Useful for testing APIs that require HMAC authentication (e.g., Shopify-style webhooks).
  * 
  * @author Your Name
  * @version 1.0.0
@@ -200,9 +201,12 @@ public class Extension implements BurpExtension, HttpHandler {
 
             // Collect only URL and BODY parameters
             if (p.type() == HttpParameterType.URL || p.type() == HttpParameterType.BODY) {
+                // IMPORTANT: URL-decode the value before adding to signature calculation
+                // Shopify docs: "The signature is unencoded, sorted, concatenated..."
+                String decodedValue = urlDecode(p.value());
                 collected
                     .computeIfAbsent(p.name(), k -> new ArrayList<>())
-                    .add(p.value());
+                    .add(decodedValue);
             }
         }
 
@@ -256,5 +260,21 @@ public class Extension implements BurpExtension, HttpHandler {
             sb.append(String.format("%02x", b));
         }
         return sb.toString();
+    }
+
+    /**
+     * URL-decodes a string value.
+     * Shopify requires unencoded values for signature calculation.
+     * 
+     * @param value The URL-encoded string
+     * @return Decoded string
+     */
+    private static String urlDecode(String value) {
+        try {
+            return java.net.URLDecoder.decode(value, StandardCharsets.UTF_8);
+        } catch (Exception e) {
+            // If decode fails, return original value
+            return value;
+        }
     }
 }

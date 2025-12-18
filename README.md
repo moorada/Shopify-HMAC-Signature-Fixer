@@ -22,16 +22,19 @@ This extension implements the signature algorithm used by **Shopify App Proxies*
 
 ```
 Input parameters:
-  extra=1&extra=2&shop=example.myshopify.com&timestamp=1317327555
+  extra=1&extra=2&shop=example.myshopify.com&path_prefix=%2Fapps%2Fawesome&timestamp=1317327555
 
-Sorted string (signature removed):
-  extra=1,2shop=example.myshopify.comtimestamp=1317327555
+Step 1 - URL-decode values (signature is "unencoded" per Shopify docs):
+  path_prefix=%2Fapps%2Fawesome → path_prefix=/apps/awesome
 
-HMAC-SHA256(secret, sorted_string):
+Step 2 - Sort alphabetically and concatenate:
+  extra=1,2path_prefix=/apps/awesomeshop=example.myshopify.comtimestamp=1317327555
+
+Step 3 - Calculate HMAC-SHA256:
   4c68c8624d737112c91818c11017d24d334b524cb5c2b8ba08daa056f7395ddb
 
 Final request:
-  ?extra=1&extra=2&shop=example.myshopify.com&timestamp=1317327555&signature=4c68c8...
+  ?extra=1&extra=2&shop=example.myshopify.com&path_prefix=%2Fapps%2Fawesome&timestamp=1317327555&signature=4c68c8...
 ```
 
 This follows the [Shopify App Proxy authentication specification](https://shopify.dev/docs/apps/build/online-store/app-proxies/authenticate-app-proxies).
