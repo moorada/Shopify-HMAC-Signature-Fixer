@@ -58,8 +58,8 @@ This follows the [Shopify App Proxy authentication specification](https://shopif
 
 ```bash
 # Clone the repository
-git clone https://github.com/moorada/burp-hmac-signature-fixer.git
-cd burp-hmac-signature-fixer
+git clone https://github.com/moorada/Shopify-HMAC-Signature-Fixer.git
+cd Shopify-HMAC-Signature-Fixer
 
 # Build the extension
 ./gradlew jar
@@ -69,7 +69,7 @@ cd burp-hmac-signature-fixer
 
 ### Option 2: Download prebuilt JAR
 
-Download the latest release from the [Releases](https://github.com/moorada/burp-hmac-signature-fixer/releases) page.
+Download the latest release from the [Releases](https://github.com/moorada/Shopify-HMAC-Signature-Fixer/releases) page.
 
 ### Load in Burp Suite
 
